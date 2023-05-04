@@ -10,7 +10,7 @@ import {Button, Drawer, message} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import React, {useRef, useState} from "react";
 import {
-  addUserUsingPOST,
+  addUserUsingPOST, deleteUserUsingPOST,
   listUserVOByPageUsingPOST,
   updateUserUsingPOST
 } from "@/services/YouAnSystem-backend/userController";
@@ -76,6 +76,30 @@ const UserInfo: React.FC = () => {
     } catch (error: any) {
       hide();
       message.error('操作失败，' + error.message);
+      return false;
+    }
+  };
+
+  /**
+   *  Delete node
+   * @zh-CN 删除节点
+   *
+   * @param record
+   */
+  const handleRemove = async (record: API.UserVO) => {
+    const hide = message.loading('正在删除');
+    if (!record) return true;
+    try {
+      await deleteUserUsingPOST({
+        id: record.id
+      });
+      hide();
+      message.success('删除成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('删除失败，' + error.message);
       return false;
     }
   };
