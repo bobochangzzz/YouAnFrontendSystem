@@ -11,12 +11,13 @@ import {PlusOutlined} from "@ant-design/icons";
 import React, {useRef, useState} from "react";
 import {
   addUserUsingPOST, deleteUserUsingPOST,
-  listUserVOByPageUsingPOST,
+  listUserVOByPageUsingPOST, updatePasswordUsingPOST,
   updateUserUsingPOST
 } from "@/services/YouAnSystem-backend/userController";
 import {SortOrder} from "antd/lib/table/interface";
 import CreateModal from "@/pages/UserInfo/components/CreateModal";
 import UpdateModal from "@/pages/UserInfo/components/UpdateModal";
+import ResetModal from "@/pages/UserInfo/components/ResetModal";
 
 const UserInfo: React.FC = () => {
   /**
@@ -28,6 +29,7 @@ const UserInfo: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
+  const [resetModalVisible, handleResetModalVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<API.UserVO>();
   const actionRef = useRef<ActionType>();
   const [showDetail, setShowDetail] = useState<boolean>(false);
@@ -103,6 +105,25 @@ const UserInfo: React.FC = () => {
       return false;
     }
   };
+
+  const handleResetPwd = async (fields: API.UserVO) => {
+    const hide = message.loading('正在重置密码');
+    if (!currentRow) return;
+    try {
+      await updatePasswordUsingPOST({
+        userId: currentRow.id,
+        ...fields
+      });
+      hide();
+      message.success('重置密码成功');
+      actionRef.current?.reload();
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('重置密码失败，' + error.message);
+      return false;
+    }
+  }
 
   const columns: ProColumns<API.RuleListItem>[] = [
     {
@@ -191,7 +212,8 @@ const UserInfo: React.FC = () => {
         <Button
           key="config2"
           onClick={() => {
-            handleOnline(record);
+            handleResetModalVisible(true);
+            setCurrentRow(record)
           }}
         >
           重置密码
@@ -413,6 +435,29 @@ const UserInfo: React.FC = () => {
           }
         }}
         visible={updateModalVisible}
+        values={currentRow || {}}
+      />
+      <ResetModal
+        columns={columns}
+        onCancel={() => {
+          handleResetModalVisible(false);
+          if (!showDetail) {
+            setCurrentRow(undefined);
+          }
+        }}
+        onSubmit={
+          async (value) => {
+            const success = await handleResetPwd(value);
+            if (success) {
+              handleResetModalVisible(false);
+              setCurrentRow(undefined);
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          }
+        }
+        visible={resetModalVisible}
         values={currentRow || {}}
       />
     </PageContainer>
