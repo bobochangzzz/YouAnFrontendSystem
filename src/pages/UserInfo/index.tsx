@@ -1,29 +1,34 @@
-import {
-  ActionType,
-  PageContainer,
-  ProColumns,
-  ProDescriptions,
-  ProDescriptionsItemProps,
-  ProTable
-} from "@ant-design/pro-components";
+import {ActionType, PageContainer, ProColumns, ProTable} from "@ant-design/pro-components";
 import {Button, Drawer, message} from "antd";
-import {PlusOutlined} from "@ant-design/icons";
+import {ExportOutlined, ImportOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {useRef, useState} from "react";
 import {
-  addUserUsingPOST, deleteUserUsingPOST,
-  listUserVOByPageUsingPOST, updatePasswordUsingPOST,
+  addUserUsingPOST,
+  deleteUserUsingPOST, importUserDataUsingPOST,
+  listUserVOByPageUsingPOST,
+  updatePasswordUsingPOST,
   updateUserUsingPOST
 } from "@/services/YouAnSystem-backend/userController";
 import {SortOrder} from "antd/lib/table/interface";
 import CreateModal from "@/pages/UserInfo/components/CreateModal";
 import UpdateModal from "@/pages/UserInfo/components/UpdateModal";
 import ResetModal from "@/pages/UserInfo/components/ResetModal";
+import request from "umi-request";
+
 
 const UserInfo: React.FC = () => {
   /**
    * @zh-CN 新建窗口的弹窗
    */
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
+  /**
+   * @zh-CN 导入窗口的弹窗
+   */
+  const [importModalVisible, handleImportModalVisible] = useState<boolean>(false);
+  /**
+   * @zh-CN 导出窗口的弹窗
+   */
+  const [exportModalVisible, handleExportModalVisible] = useState<boolean>(false);
   /**
    * @en-US The pop-up window of the distribution update window
    * @zh-CN 分布更新窗口的弹窗
@@ -124,6 +129,45 @@ const UserInfo: React.FC = () => {
       return false;
     }
   }
+
+  // 打开文件选择对话框
+  const openFileDialog = () => {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.xls,.xlsx'; // 只允许选择 Excel 文件
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        resolve(file);
+      };
+      input.onerror = (event) => {
+        reject(event);
+      };
+      input.click();
+    });
+  };
+
+// 发送导入请求
+  const importData = (formData: any) => {
+    return importUserDataUsingPOST(formData);
+  };
+
+
+  const handleImport = async () => {
+    try {
+      const file: any = await openFileDialog(); // 打开文件选择对话框，获取用户选择的文件
+      if (file) {
+        const formData = new FormData(); // 创建表单数据
+        formData.append('file', file); // 添加文件数据
+        const result = await importData(formData); // 发送导入请求
+        message.success(result.message);
+        actionRef.current?.reload(); // 刷新表格数据
+      }
+    } catch (error) {
+      message.error('导入失败');
+      console.error(error);
+    }
+  };
 
   const columns: ProColumns<API.RuleListItem>[] = [
     {
@@ -239,113 +283,7 @@ const UserInfo: React.FC = () => {
         </Button>,
       ],
     },
-    /**
-     {
-      title: <FormattedMessage id="pages.searchTable.titleDesc" defaultMessage="Description"/>,
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleCallNo"
-          defaultMessage="Number of service calls"
-        />
-      ),
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-    },
-     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status"/>,
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.default"
-              defaultMessage="Shut down"
-            />
-          ),
-          status: 'Default',
-        },
-        1: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.running" defaultMessage="Running"/>
-          ),
-          status: 'Processing',
-        },
-        2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online"/>
-          ),
-          status: 'Success',
-        },
-        3: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.abnormal"
-              defaultMessage="Abnormal"
-            />
-          ),
-          status: 'Error',
-        },
-      },
-    },
-     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleUpdatedAt"
-          defaultMessage="Last scheduled time"
-        />
-      ),
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, {defaultRender, ...rest}, form) => {
-        const status = form.getFieldValue('status');
-        if (`${status}` === '0') {
-          return false;
-        }
-        if (`${status}` === '3') {
-          return (
-            <Input
-              {...rest}
-              placeholder={intl.formatMessage({
-                id: 'pages.searchTable.exception',
-                defaultMessage: 'Please enter the reason for the exception!',
-              })}
-            />
-          );
-        }
-        return defaultRender(item);
-      },
-    },
-     {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating"/>,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            handleUpdateModalOpen(true);
-            setCurrentRow(record);
-          }}
-        >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration"/>
-        </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          <FormattedMessage
-            id="pages.searchTable.subscribeAlert"
-            defaultMessage="Subscribe to alerts"
-          />
-        </a>,
-      ],
-    },*/
   ];
-
   return (
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
@@ -364,6 +302,26 @@ const UserInfo: React.FC = () => {
           >
             <PlusOutlined/> 新建
           </Button>,
+          <Button
+            type="primary"
+            key="export"
+            onClick={() => {
+              // 调用后端接口导出表格
+              window.location.href = `${window.location.origin}/api/user/export`
+            }}
+          >
+            <ExportOutlined/> 导出
+          </Button>,
+          /*<Button
+            type="primary"
+            key="import"
+            onClick={() => {
+              handleImportModalVisible(true);
+              handleImport();
+            }}
+          >
+            <ImportOutlined/> 导入
+          </Button>*/
         ]}
         request={async (params,
                         sort: Record<string, SortOrder>,

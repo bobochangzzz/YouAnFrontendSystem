@@ -514,12 +514,16 @@ declare namespace API {
 
   type UserQueryRequest = {
     current?: number;
+    departmentId?: number;
     id?: number;
     pageSize?: number;
     phone?: string;
     sortField?: string;
     sortOrder?: string;
+    status?: number;
+    userAccount?: string;
     userName?: string;
+    userRoleName?: string;
   };
 
   type UserRegisterRequest = {
@@ -543,10 +547,10 @@ declare namespace API {
     departmentId?: number;
     id?: number;
     phone?: string;
+    status?: number;
     userName?: string;
     userPassword?: string;
     userRoleName?: string;
-    status?: number;
   };
 
   type UserVO = {
