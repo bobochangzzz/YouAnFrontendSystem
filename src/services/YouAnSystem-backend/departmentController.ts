@@ -47,6 +47,21 @@ export async function listDepartmentByPageUsingPOST(
   });
 }
 
+/** listDepartmentVOByPage POST /api/department/list/vo/page */
+export async function listDepartmentVOByPageUsingPOST(
+  body: API.DepartmentQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageDepartmentVO>('/api/department/list/vo/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** updateDepartment POST /api/department/update */
 export async function updateDepartmentUsingPOST(
   body: API.DepartmentUpdateRequest,

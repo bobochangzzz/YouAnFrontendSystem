@@ -1,4 +1,11 @@
 declare namespace API {
+  type addDeploymentByStringUsingPOSTParams = {
+    /** stringBPMN */
+    stringBPMN: string;
+    /** processName */
+    processName: string;
+  };
+
   type AssignMenuRequest = {
     menuIds?: number[];
     roleId?: number;
@@ -7,6 +14,12 @@ declare namespace API {
   type AssignRoleRequest = {
     userId?: number;
     userRoleEnumText?: string;
+  };
+
+  type BaseResponse = {
+    code?: number;
+    data?: Record<string, any>;
+    message?: string;
   };
 
   type BaseResponseboolean = {
@@ -39,6 +52,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListMenuVo = {
+    code?: number;
+    data?: MenuVo[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO = {
     code?: number;
     data?: LoginUserVO;
@@ -54,6 +73,12 @@ declare namespace API {
   type BaseResponsePageDepartment = {
     code?: number;
     data?: PageDepartment;
+    message?: string;
+  };
+
+  type BaseResponsePageDepartmentVO = {
+    code?: number;
+    data?: PageDepartmentVO;
     message?: string;
   };
 
@@ -135,6 +160,11 @@ declare namespace API {
     userName?: string;
   };
 
+  type delDefinitionUsingGETParams = {
+    /** depID */
+    depID: string;
+  };
+
   type DeleteRequest = {
     id?: number;
   };
@@ -179,6 +209,15 @@ declare namespace API {
     parentId?: number;
     phone?: string;
     status?: number;
+  };
+
+  type DepartmentVO = {
+    departmentHeadName?: string;
+    departmentName?: string;
+    id?: number;
+    parDepartmentName?: string;
+    phone?: string;
+    email?: string;
   };
 
   type Employee = {
@@ -295,6 +334,13 @@ declare namespace API {
     roleId?: number;
   };
 
+  type getProcessDefineXMLUsingGETParams = {
+    /** deploymentId */
+    deploymentId: string;
+    /** resourceName */
+    resourceName: string;
+  };
+
   type getUserByIdUsingGETParams = {
     /** id */
     id?: number;
@@ -362,6 +408,22 @@ declare namespace API {
     type?: number;
   };
 
+  type MenuVo = {
+    component?: string;
+    createTime?: string;
+    icon?: string;
+    id?: number;
+    isDelete?: number;
+    name?: string;
+    path?: string;
+    permissionValue?: string;
+    pid?: number;
+    status?: number;
+    subMenuList?: MenuVo[];
+    type?: number;
+    updateTime?: string;
+  };
+
   type OrderItem = {
     asc?: boolean;
     column?: string;
@@ -375,6 +437,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: Department[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageDepartmentVO = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: DepartmentVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -478,10 +553,22 @@ declare namespace API {
     status?: number;
   };
 
+  type startProcessUsingGETParams = {
+    /** processDefinitionKey */
+    processDefinitionKey: string;
+    /** instanceName */
+    instanceName: string;
+  };
+
   type StringBuffer = true;
 
   type uploadFileUsingPOSTParams = {
     biz?: string;
+  };
+
+  type uploadStreamAndDeploymentUsingPOSTParams = {
+    /** processName */
+    processName: string;
   };
 
   type User = {

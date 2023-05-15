@@ -29,6 +29,14 @@ export async function deleteMenuUsingPOST(
   });
 }
 
+/** listMenu GET /api/menu/list */
+export async function listMenuUsingGET(options?: { [key: string]: any }) {
+  return request<API.BaseResponseListMenuVo>('/api/menu/list', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** listMenuByPage POST /api/menu/list/page */
 export async function listMenuByPageUsingPOST(
   body: API.MenuQueryRequest,
