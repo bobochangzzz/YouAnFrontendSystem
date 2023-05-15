@@ -9,9 +9,9 @@ import {
   listDepartmentVOByPageUsingPOST,
   updateDepartmentUsingPOST,
 } from '@/services/YouAnSystem-backend/departmentController';
-import UpdateModal from '@/pages/TableList/components/UpdateModal';
+import UpdateModal from '@/pages/DepartmentInfo/components/UpdateModal';
 import { PlusOutlined } from '@ant-design/icons';
-import CreateModal from '@/pages/TableList/components/CreateModal';
+import CreateModal from '@/pages/DepartmentInfo/components/CreateModal';
 
 const TableList: React.FC = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
