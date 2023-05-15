@@ -284,7 +284,6 @@ const UserInfo: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        columns={columns}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -338,6 +337,7 @@ const UserInfo: React.FC = () => {
             };
           }
         }}
+        columns={columns}
       />
       <CreateModal
         columns={columns}
