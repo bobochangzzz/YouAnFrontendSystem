@@ -1,20 +1,19 @@
-import {ActionType, PageContainer, ProColumns, ProTable} from "@ant-design/pro-components";
-import {Button, Drawer, message} from "antd";
-import {ExportOutlined, ImportOutlined, PlusOutlined} from "@ant-design/icons";
-import React, {useRef, useState} from "react";
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { Button, Drawer, message } from 'antd';
+import { ExportOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useRef, useState } from 'react';
 import {
   addUserUsingPOST,
-  deleteUserUsingPOST, importUserDataUsingPOST,
+  deleteUserUsingPOST,
+  importUserDataUsingPOST,
   listUserVOByPageUsingPOST,
   updatePasswordUsingPOST,
-  updateUserUsingPOST
-} from "@/services/YouAnSystem-backend/userController";
-import {SortOrder} from "antd/lib/table/interface";
-import CreateModal from "@/pages/UserInfo/components/CreateModal";
-import UpdateModal from "@/pages/UserInfo/components/UpdateModal";
-import ResetModal from "@/pages/UserInfo/components/ResetModal";
-import request from "umi-request";
-
+  updateUserUsingPOST,
+} from '@/services/YouAnSystem-backend/userController';
+import { SortOrder } from 'antd/lib/table/interface';
+import CreateModal from '@/pages/UserInfo/components/CreateModal';
+import UpdateModal from '@/pages/UserInfo/components/UpdateModal';
+import ResetModal from '@/pages/UserInfo/components/ResetModal';
 
 const UserInfo: React.FC = () => {
   /**
@@ -75,7 +74,7 @@ const UserInfo: React.FC = () => {
     try {
       await updateUserUsingPOST({
         id: currentRow.id,
-        ...fields
+        ...fields,
       });
       hide();
       message.success('操作成功');
@@ -98,7 +97,7 @@ const UserInfo: React.FC = () => {
     if (!record) return true;
     try {
       await deleteUserUsingPOST({
-        id: record.id
+        id: record.id,
       });
       hide();
       message.success('删除成功');
@@ -117,7 +116,7 @@ const UserInfo: React.FC = () => {
     try {
       await updatePasswordUsingPOST({
         userId: currentRow.id,
-        ...fields
+        ...fields,
       });
       hide();
       message.success('重置密码成功');
@@ -128,7 +127,7 @@ const UserInfo: React.FC = () => {
       message.error('重置密码失败，' + error.message);
       return false;
     }
-  }
+  };
 
   // 打开文件选择对话框
   const openFileDialog = () => {
@@ -147,11 +146,10 @@ const UserInfo: React.FC = () => {
     });
   };
 
-// 发送导入请求
+  // 发送导入请求
   const importData = (formData: any) => {
     return importUserDataUsingPOST(formData);
   };
-
 
   const handleImport = async () => {
     try {
@@ -174,14 +172,12 @@ const UserInfo: React.FC = () => {
       title: '用户编号',
       align: 'center',
       dataIndex: 'id',
-      valueType: 'text',
       hideInSearch: true,
     },
     {
       title: '用户名称',
       align: 'center',
       dataIndex: 'userAccount',
-      valueType: 'text',
     },
     {
       title: '用户密码',
@@ -194,34 +190,31 @@ const UserInfo: React.FC = () => {
       title: '用户昵称',
       align: 'center',
       dataIndex: 'userName',
-      valueType: 'text',
     },
     {
       title: '部门名称',
       align: 'center',
       dataIndex: 'departmentName',
-      valueType: 'text',
     },
     {
       title: '权限',
       align: 'center',
       dataIndex: 'userRoleName',
       valueEnum: {
-        "admin": {
+        admin: {
           text: '管理员',
           status: 'Processing',
         },
-        "user": {
+        user: {
           text: '普通用户',
           status: 'Default',
         },
-      }
+      },
     },
     {
       title: '联系电话',
       align: 'center',
       dataIndex: 'phone',
-      valueType: 'text',
     },
     {
       title: '状态',
@@ -235,11 +228,12 @@ const UserInfo: React.FC = () => {
         1: {
           text: '封禁',
           status: 'Error',
-        }
-      }
+        },
+      },
     },
     {
       title: '操作',
+      width: 80,
       align: 'center',
       dataIndex: 'option',
       valueType: 'option',
@@ -257,13 +251,12 @@ const UserInfo: React.FC = () => {
           key="config2"
           onClick={() => {
             handleResetModalVisible(true);
-            setCurrentRow(record)
+            setCurrentRow(record);
           }}
         >
           重置密码
         </Button>,
         <Button
-          type="text"
           key="config3"
           onClick={() => {
             handleOffline(record);
@@ -272,7 +265,6 @@ const UserInfo: React.FC = () => {
           分配角色
         </Button>,
         <Button
-          type="text"
           key="config4"
           danger
           onClick={() => {
@@ -292,6 +284,7 @@ const UserInfo: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
+        columns={columns}
         toolBarRender={() => [
           <Button
             type="primary"
@@ -300,17 +293,17 @@ const UserInfo: React.FC = () => {
               handleModalVisible(true);
             }}
           >
-            <PlusOutlined/> 新建
+            <PlusOutlined /> 新建
           </Button>,
           <Button
             type="primary"
             key="export"
             onClick={() => {
               // 调用后端接口导出表格
-              window.location.href = `${window.location.origin}/api/user/export`
+              window.location.href = `${window.location.origin}/api/user/export`;
             }}
           >
-            <ExportOutlined/> 导出
+            <ExportOutlined /> 导出
           </Button>,
           /*<Button
             type="primary"
@@ -323,12 +316,13 @@ const UserInfo: React.FC = () => {
             <ImportOutlined/> 导入
           </Button>*/
         ]}
-        request={async (params,
-                        sort: Record<string, SortOrder>,
-                        filter: Record<string, React.ReactText[] | null>,
+        request={async (
+          params,
+          sort: Record<string, SortOrder>,
+          filter: Record<string, React.ReactText[] | null>,
         ) => {
           const res: any = await listUserVOByPageUsingPOST({
-            ...params
+            ...params,
           });
           if (res.data) {
             return {
@@ -341,21 +335,10 @@ const UserInfo: React.FC = () => {
               data: res.data.message || [],
               success: false,
               total: 0,
-            }
+            };
           }
         }}
-        columns={columns}
       />
-      <Drawer
-        width={600}
-        visible={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-      </Drawer>
       <CreateModal
         columns={columns}
         onCancel={() => {
@@ -371,7 +354,6 @@ const UserInfo: React.FC = () => {
             }
           }
         }}
-
         visible={createModalVisible}
       />
       <UpdateModal
@@ -403,18 +385,16 @@ const UserInfo: React.FC = () => {
             setCurrentRow(undefined);
           }
         }}
-        onSubmit={
-          async (value) => {
-            const success = await handleResetPwd(value);
-            if (success) {
-              handleResetModalVisible(false);
-              setCurrentRow(undefined);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+        onSubmit={async (value) => {
+          const success = await handleResetPwd(value);
+          if (success) {
+            handleResetModalVisible(false);
+            setCurrentRow(undefined);
+            if (actionRef.current) {
+              actionRef.current.reload();
             }
           }
-        }
+        }}
         visible={resetModalVisible}
         values={currentRow || {}}
       />
