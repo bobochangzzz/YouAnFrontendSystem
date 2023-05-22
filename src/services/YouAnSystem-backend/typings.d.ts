@@ -265,7 +265,7 @@ declare namespace API {
     remark?: string;
     resignTime?: string;
     school?: string;
-    sex?: number;
+    sex?: string;
     status?: number;
   };
 
@@ -290,7 +290,7 @@ declare namespace API {
     remark?: string;
     resignTime?: string;
     school?: string;
-    sex?: number;
+    sex?: string;
     sortField?: string;
     sortOrder?: string;
     status?: number;
@@ -315,7 +315,7 @@ declare namespace API {
     remark?: string;
     resignTime?: string;
     school?: string;
-    sex?: number;
+    sex?: string;
     status?: number;
   };
 
@@ -378,6 +378,8 @@ declare namespace API {
     pid?: number;
     status?: number;
     type?: number;
+    permissionValue?: string;
+    component?: string;
   };
 
   type MenuQueryRequest = {

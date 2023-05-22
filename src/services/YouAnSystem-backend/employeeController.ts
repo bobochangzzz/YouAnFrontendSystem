@@ -83,7 +83,7 @@ export async function listEmployeeByPageUsingPOST(
 }
 
 /** updateRole POST /api/employee/update */
-export async function updateRoleUsingPOST(
+export async function updateEmployeeUsingPOST(
   body: API.EmployeeUpdateRequest,
   options?: { [key: string]: any },
 ) {
