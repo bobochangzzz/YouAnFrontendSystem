@@ -28,6 +28,18 @@
     icon: 'https://bobocahng-1309945187.cos.ap-guangzhou.myqcloud.com/20230512/甜甜圈.png',
     component: './RoleInfo',
   },
+  {
+    path: '/menuInfo',
+    name: '菜单管理',
+    icon: 'https://bobocahng-1309945187.cos.ap-guangzhou.myqcloud.com/20230512/甜甜圈.png',
+    component: './MenuInfo',
+  },
+  {
+    path: '/employeeInfo',
+    name: '员工管理',
+    icon: 'https://bobocahng-1309945187.cos.ap-guangzhou.myqcloud.com/20230512/甜甜圈.png',
+    component: './EmployeeInfo',
+  },
   /*{
     path: '/admin',
     name: '管理页',
